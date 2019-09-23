@@ -1,18 +1,24 @@
 {
-  "name": "robot",
+  "name": "schedule-generator",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Personal educational schedule generator.",
+  "keywords": [
+    "schedule",
+    "generator"
+  ],
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
     "start": "webpack -w",
     "build": "NODE_ENV='production' webpack",
-    "build-win": "set NODE_ENV='production' & webpack"
+    "prepublishOnly": "npm run build",
+    "test": "jest"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Dmitry Malofeev",
   "license": "ISC",
   "dependencies": {
-    "javascript-state-machine": "^3.1.0",
     "lodash": "^4.17.15",
     "uuid": "^3.3.3"
   },
@@ -22,6 +28,12 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "jest": "^24.9.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8"
