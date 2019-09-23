@@ -1,9 +1,16 @@
-import uuidv4 from 'uuid/v4';
+import random from 'lodash/random';
 import head from 'lodash/head';
 import tail from 'lodash/tail';
-import reverse from 'lodash/reverse';
+import includes from 'lodash/includes';
+import has from 'lodash/has';
+import get from 'lodash/get';
+import compact from 'lodash/compact';
+import flattenDeep from 'lodash/flattenDeep';
+import uuidv4 from 'uuid/v4';
 import subjects from './subjects';
 import checkPercentage from './checkPercentage';
+import checkSubjects from './checkSubjects';
+import checkSchedule from './checkSchedule';
 import genHtml from './genHtml.js';
 
 checkPercentage(subjects);
@@ -44,51 +51,57 @@ const getSubjectsPerMonth = (subjects) => {
     return subjectsPerMonth;
 };
 
-const getDaysPerMonth = (days) => [...new Array(days)].map((d, id) => ({id: id + 1, subjects: []}));
+const getDaysPerMonth = (days) => [...new Array(days)].map((d, id) => ({id: id + 1}));
 
-const genSchedulePerSubject = (days, subjects) => {
-    const daysLength = days.length;
+const getSubjectsPerDay = (subjects, limit) => { // что делать если уроков меньше чем limit ???
+    const processedSubjects = subjects.length < limit
+        ? flattenDeep(subjects)
+        : subjects;
 
-    const iter = (days, currentDayId, subjects) => {
-        if (!subjects.length) return days;
+    const subjectsPerDay = [...new Array(limit)]
+        .map((item, id) => {
+            const path = subjects.length < limit ? `[${id}]` : `[${id}][0]`;
+            const subject = get(processedSubjects, path, null);
 
-        if (days.every((d) => d.subjects.length === lessonsPerDay)) return days;
-
-        const newId = (currentDayId === daysLength - 1) ? 0 : currentDayId + 1;
-
-        const day = days[currentDayId];
-
-        if (day.subjects.length === lessonsPerDay) return iter(days, newId, subjects);
-
-        const subject = head(subjects);
-
-        const newDays = days.map((d) => {
-            if (d.id !== day.id) return d;
-
-            return {
-                ...d,
-                subjects: [...d.subjects, subject]
-            };
+            return subject;
         });
 
-        return iter(newDays, newId, tail(subjects));
-    };
+    return compact(subjectsPerDay);
+};
 
-    return iter(days, 0, subjects);
+const getFilteredSubjects = (allSubjects, selectedSubjects) => {
+    const result = allSubjects
+        .map((subSubjects) => subSubjects.filter((subSubject) => !includes(selectedSubjects, subSubject.id)))
+        .filter((subSubjects) => subSubjects.length !== 0);
+
+    return result;
 };
 
 const genSchedule = (days, subjects) => {
-    if (!subjects.length) return days;
+    if (!days.length) return [];
 
-    const newDays = genSchedulePerSubject(days, head(subjects));
+    const day = head(days);
 
-    return genSchedule(reverse(newDays), tail(subjects));
+    const subjectsPerDay = getSubjectsPerDay(subjects, lessonsPerDay);
+
+    const newSubjects = getFilteredSubjects(subjects, subjectsPerDay.map((s) => s.id));
+
+    const dayWithSubjects = {...day, subjects: subjectsPerDay};
+
+    return [dayWithSubjects, ...genSchedule(tail(days), newSubjects)];
 };
 
 const subjectsWithData = getSubjects(subjects);
 const subjectsPerMonth = getSubjectsPerMonth(subjectsWithData);
 const daysPerMonth = getDaysPerMonth(educationDaysPerMonth);
+
+checkSubjects(educationDaysPerMonth * lessonsPerDay)(subjectsWithData);
+
 const schedule = genSchedule(daysPerMonth, subjectsPerMonth);
+
+console.log('schedule:', schedule);
+
+checkSchedule(educationDaysPerMonth * lessonsPerDay)(schedule);
 
 const html = genHtml(schedule);
 
