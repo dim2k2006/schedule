@@ -6,24 +6,15 @@ import subjects from './subjects';
 import checkPercentage from './checkPercentage';
 import genHtml from './genHtml.js';
 
+import getSubjects from './utils/getSubjects';
+
 checkPercentage(subjects);
 
 const educationDaysPerMonth = 12;
 const educationTimePerMonthInHours = 48;
-const educationTimePerMonthInMinutes = educationTimePerMonthInHours * 60;
-const lessonDurationInMinutes = 60;
+const EDUCATION_TIME_PER_MONTH_IN_MINUTES = educationTimePerMonthInHours * 60;
+const LESSON_DURATION_IN_MINUTES = 60;
 const lessonsPerDay = 4;
-
-const getSubjects = (subjects) => subjects
-    .map((subject) => ({
-        ...subject,
-        occupiedTimePerMonthInMinutes: educationTimePerMonthInMinutes * subject.percentage / 100
-    }))
-    .map((subject) => ({
-        ...subject,
-        lessonsPerMonth: Math.round(subject.occupiedTimePerMonthInMinutes / lessonDurationInMinutes)
-    }))
-    .filter((subject) => subject.lessonsPerMonth > 0);
 
 const getSubjectsPerMonth = (subjects) => {
     const subjectsPerMonth = subjects
@@ -85,7 +76,7 @@ const genSchedule = (days, subjects) => {
     return genSchedule(reverse(newDays), tail(subjects));
 };
 
-const subjectsWithData = getSubjects(subjects);
+const subjectsWithData = getSubjects(subjects, EDUCATION_TIME_PER_MONTH_IN_MINUTES, LESSON_DURATION_IN_MINUTES);
 const subjectsPerMonth = getSubjectsPerMonth(subjectsWithData);
 const daysPerMonth = getDaysPerMonth(educationDaysPerMonth);
 const schedule = genSchedule(daysPerMonth, subjectsPerMonth);
