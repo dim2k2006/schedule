@@ -14,7 +14,7 @@ module.exports = {
   output: {
     path: path.join(PATHS.public),
     filename: 'bundle.js',
-    library: 'schedule-generator',
+    library: 'scheduleGenerator',
   },
 
   mode: NODE_ENV === 'development' ? 'development' : 'production',
