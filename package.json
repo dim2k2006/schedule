@@ -6,7 +6,7 @@
     "schedule",
     "generator"
   ],
-  "main": "dist/index.js",
+  "main": "public/index.js",
   "engines": {
     "node": ">=8"
   },
