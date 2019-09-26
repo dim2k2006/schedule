@@ -55,7 +55,6 @@ if (NODE_ENV === 'production') {
           booleans: true,
           loops: true,
           unused: true,
-          warnings: false,
           drop_console: true,
         },
       },
