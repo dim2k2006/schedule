@@ -54,5 +54,11 @@ export default [
         title: 'МШП',
         percentage: 0,
         type: 'technical'
-    }
+    },
+  {
+    id: uuidv4(),
+    title: 'Haskell - stepik',
+    percentage: 0,
+    type: 'technical',
+  }
 ];

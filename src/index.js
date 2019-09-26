@@ -5,6 +5,7 @@ import genSchedule from './utils/genSchedule';
 
 export default (subjects = [], userConfig = {}) => {
   const defaultConfig = {
+    SUBJECTS_PERCENTAGE_LIMIT: 100,
     EDUCATION_DAYS_PER_MONTH: 12,
     EDUCATION_TIME_PER_MONTH_IN_HOURS: 48,
     LESSON_DURATION_IN_MINUTES: 60,
@@ -14,6 +15,13 @@ export default (subjects = [], userConfig = {}) => {
   const config = { ...defaultConfig, ...userConfig };
 
   const EDUCATION_TIME_PER_MONTH_IN_MINUTES = config.EDUCATION_TIME_PER_MONTH_IN_HOURS * 60;
+
+  const subjectsPercentageSum = subjects
+    .reduce((accumulator, subject) => accumulator + subject.percentage, 0);
+
+  if (subjectsPercentageSum !== config.SUBJECTS_PERCENTAGE_LIMIT) {
+    throw new Error(`Subjects percentage sum can not be greater then ${config.SUBJECTS_PERCENTAGE_LIMIT}`);
+  }
 
   const subjectsWithData = getSubjects(
     subjects,

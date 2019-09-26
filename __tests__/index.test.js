@@ -18,4 +18,21 @@ describe('genSchedule', () => {
 
     expect(actual).toEqual(newExpected);
   });
+
+  test('Should throw error if subjects percentage is wrong.', () => {
+    function crash() {
+      genSchedule([
+        {
+          title: 'Some subject 1',
+          percentage: 90,
+        },
+        {
+          title: 'Some subject 2',
+          percentage: 20,
+        },
+      ]);
+    }
+
+    expect(crash).toThrow();
+  });
 });
