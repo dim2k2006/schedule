@@ -1,12 +1,12 @@
 {
   "name": "edu-schedule-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Personal educational schedule generator.",
   "keywords": [
     "schedule",
     "generator"
   ],
-  "main": "public/index.js",
+  "main": "public/bundle.js",
   "engines": {
     "node": ">=8"
   },
