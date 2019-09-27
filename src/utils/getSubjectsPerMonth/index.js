@@ -4,12 +4,7 @@ const getSubjectsPerMonth = (subjects) => subjects
   .sort((a, b) => (a.percentage > b.percentage ? -1 : 1))
   .reduce((accumulator, subject) => {
     const lessonsPerMonth = [...new Array(subject.lessonsPerMonth)]
-      .map(() => ({
-        id: subject.id,
-        percentage: subject.percentage,
-        title: subject.title,
-        type: subject.type,
-      }));
+      .map(() => ({ ...subject }));
 
     return [...accumulator, lessonsPerMonth];
   }, [])
