@@ -13,7 +13,10 @@ const genSchedule = (days = [], subjects = [], lessonsPerDay) => {
     subjects: daySubjects,
   };
 
-  const flattenData = flattenDeep([newDay, genSchedule(tail(days), subjects.slice(lessonsPerDay), lessonsPerDay)]);
+  const flattenData = flattenDeep([
+    newDay,
+    genSchedule(tail(days), subjects.slice(lessonsPerDay), lessonsPerDay),
+  ]);
 
   return compact(flattenData);
 };
