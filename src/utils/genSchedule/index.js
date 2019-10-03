@@ -1,14 +1,24 @@
 import head from 'lodash/head';
 import tail from 'lodash/tail';
-import reverse from 'lodash/reverse';
-import genSchedulePerSubject from '../genSchedulePerSubject';
+import flattenDeep from 'lodash/flattenDeep';
+import compact from 'lodash/compact';
 
-const genSchedule = (days, subjects, lessonsPerDay) => {
-  if (!subjects.length) return days;
+const genSchedule = (days = [], subjects = [], lessonsPerDay) => {
+  if (!days.length) return null;
 
-  const newDays = genSchedulePerSubject(days, head(subjects), lessonsPerDay);
+  const day = head(days);
+  const daySubjects = subjects.slice(0, lessonsPerDay);
+  const newDay = {
+    ...day,
+    subjects: daySubjects,
+  };
 
-  return genSchedule(reverse(newDays), tail(subjects), lessonsPerDay);
+  const flattenData = flattenDeep([
+    newDay,
+    genSchedule(tail(days), subjects.slice(lessonsPerDay), lessonsPerDay),
+  ]);
+
+  return compact(flattenData);
 };
 
 export default genSchedule;

@@ -1,6 +1,7 @@
 import getSubjects from './utils/getSubjects';
 import getSubjectsPerMonth from './utils/getSubjectsPerMonth';
 import getDaysPerMonth from './utils/getDaysPerMonth';
+import sort from './utils/sort';
 import genSchedule from './utils/genSchedule';
 
 export default (subjects = [], userConfig = {}) => {
@@ -29,9 +30,11 @@ export default (subjects = [], userConfig = {}) => {
     config.LESSON_DURATION_IN_MINUTES,
   );
 
-  const subjectsPerMonth = getSubjectsPerMonth(subjectsWithData);
+  const subjectsPerMonth = sort(getSubjectsPerMonth(subjectsWithData));
 
   const daysPerMonth = getDaysPerMonth(config.EDUCATION_DAYS_PER_MONTH);
 
-  return genSchedule(daysPerMonth, subjectsPerMonth, config.LESSONS_PER_DAY);
+  const result = genSchedule(daysPerMonth, subjectsPerMonth, config.LESSONS_PER_DAY);
+
+  return result;
 };
